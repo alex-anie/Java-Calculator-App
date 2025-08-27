@@ -21,7 +21,7 @@ public class Calculator {
             "0", ".", "√", "="
     };
 
-    String[] rightSysbols = {"÷", "×", "-", "+"};
+    String[] rightSymbols = {"÷", "×", "-", "+"};
     String[] topSymbols = {"AC", "+/-", "%"};
 
 
@@ -30,8 +30,12 @@ public class Calculator {
     JPanel displayPanel = new JPanel();
     JPanel buttonsPanel = new JPanel();
 
+    String A = "0";
+    String operator = null;
+    String B = null;
+
     Calculator(){
-        frame.setVisible(true);
+//        frame.setVisible(true);
         frame.setSize(boardWidth, boardHeight);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
@@ -65,7 +69,7 @@ public class Calculator {
                 button.setBackground(customLightGray);
                 button.setForeground(customBlack);
             }
-            else if(Arrays.asList(rightSysbols).contains(buttonValue)){
+            else if(Arrays.asList(rightSymbols).contains(buttonValue)){
                 button.setBackground(customOrange);
                 button.setForeground(Color.white);
             }
@@ -81,15 +85,52 @@ public class Calculator {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     JButton button = (JButton) e.getSource();
-                    String buttonView = button.getText();
-                    if(Arrays.asList(topSymbols).contains(buttonValue)){
+                    String buttonValue = button.getText();
+                    if(Arrays.asList(rightSymbols).contains(buttonValue)){
+                        if(buttonValue == "="){
+                            if(A != null){
+                                B = displayLabel.getText();
+                                double numA = Double.parseDouble(A);
+                                double numB = Double.parseDouble(B);
 
+                                if(operator == "+"){
+                                    displayLabel.setText(removeZeroDecimal(numA+numB));
+                                } else if (operator == "-") {
+                                    displayLabel.setText(removeZeroDecimal(numA-numB));
+                                }else if(operator == "×"){
+                                    displayLabel.setText(removeZeroDecimal(numA*numB));
+                                }
+                                else if(operator == "÷"){
+                                    displayLabel.setText(removeZeroDecimal(numA/numB));
+                                }
+                                clearAll();
+                            }
+                        }else if("+-×÷".contains(buttonValue)){
+                            if(operator == null){
+                                A = displayLabel.getText();
+                                displayLabel.setText("0");
+                                B = "0";
+                            }
+                            operator = buttonValue;
+                        }
                     }
                     else if(Arrays.asList(topSymbols).contains(buttonValue)){
-
+                        if(buttonValue == "AC"){
+                              clearAll();
+                              displayLabel.setText("0");
+                        }else if(buttonValue == "+/-"){
+                            double numDisplay = Double.parseDouble(displayLabel.getText());
+                            numDisplay *= -1;
+                            displayLabel.setText(removeZeroDecimal(numDisplay));
+                        }
+                        else if(buttonValue == "%"){
+                            double numDisplay = Double.parseDouble(displayLabel.getText());
+                            numDisplay /= 100;
+                            displayLabel.setText(removeZeroDecimal(numDisplay));
+                        }
                     }
                     else {
-                        if(buttonView == "."){
+                        if(buttonValue == "."){
                             if(!displayLabel.getText().contains(buttonValue)){
                                 displayLabel.setText(displayLabel.getText() + buttonValue);
                             }
@@ -104,9 +145,23 @@ public class Calculator {
                     }
                 }
             });
+
+            frame.setVisible(true);
         }
 
     }
 
+    void clearAll(){
+        A = "0";
+        operator = null;
+        B = null;
+    }
+
+    String removeZeroDecimal(double numDisplay){
+        if(numDisplay % 1 == 0){
+            return Integer.toString((int) numDisplay);
+        }
+        return Double.toString(numDisplay);
+    }
 
 }

@@ -13,6 +13,16 @@ public class Calculator {
     Color customBlack = new Color(28, 28, 28);
     Color customOrange = new Color(255, 149, 0);
 
+    String[] buttonValues = {
+            "AC", "+/-", "%", "÷",
+            "7", "8", "9", "×",
+            "4", "5", "6", "-",
+            "1", "2", "3", "+",
+            "0", ".", "√", "="
+    };
+
+    String[] rightSysbols = {"÷", "×", "-", "+"};
+    String[] topSymbols = {"AC", "+/-", "%"};
 
 
     JFrame frame = new JFrame("Calculator");
@@ -38,6 +48,63 @@ public class Calculator {
         displayPanel.setLayout(new BorderLayout());
         displayPanel.add(displayLabel);
         frame.add(displayPanel, BorderLayout.NORTH);
+
+        buttonsPanel.setLayout(new GridLayout(5, 4));
+        buttonsPanel.setBackground(customBlack);
+        frame.add(buttonsPanel);
+
+
+        for(int i = 0; i < buttonValues.length; i++){
+            JButton button = new JButton();
+            String buttonValue = buttonValues[i];
+            button.setFont(new Font("Arial", Font.PLAIN, 30));
+            button.setText(buttonValue);
+            button.setFocusable(false);
+            button.setBorder(new LineBorder(customBlack));
+            if(Arrays.asList(topSymbols).contains(buttonValue)){
+                button.setBackground(customLightGray);
+                button.setForeground(customBlack);
+            }
+            else if(Arrays.asList(rightSysbols).contains(buttonValue)){
+                button.setBackground(customOrange);
+                button.setForeground(Color.white);
+            }
+            else {
+                button.setBackground(customDarkGray);
+                button.setForeground(Color.white);
+            }
+
+            buttonsPanel.add(button);
+
+            button.addActionListener(new ActionListener(){
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JButton button = (JButton) e.getSource();
+                    String buttonView = button.getText();
+                    if(Arrays.asList(topSymbols).contains(buttonValue)){
+
+                    }
+                    else if(Arrays.asList(topSymbols).contains(buttonValue)){
+
+                    }
+                    else {
+                        if(buttonView == "."){
+                            if(!displayLabel.getText().contains(buttonValue)){
+                                displayLabel.setText(displayLabel.getText() + buttonValue);
+                            }
+                        }else if("0123456789".contains(buttonValue)){
+                            if(displayLabel.getText() == "0"){
+                                displayLabel.setText(buttonValue);
+                            }
+                            else {
+                                displayLabel.setText(displayLabel.getText() + buttonValue);
+                            }
+                        }
+                    }
+                }
+            });
+        }
 
     }
 
